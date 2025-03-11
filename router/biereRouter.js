@@ -1,15 +1,12 @@
-const {ajouterBiere, modifierBiere, supprimerBiere, listeBieres, detailBiere} = require("../controller/biereController");
-const router = express.Router();
-const { body, param } = require("express-validator");
+const express = require("express")
+const {ajouterBiere, modifierBiere, supprimerBiere, listeBieres, detailBiere} = require("../controllers/biereController");
+const biereRouter = express.Router()
+const biereValidator = require("../middleware/barValidator.js");
 
-const validateBiere = [
-    body("name").notEmpty().withMessage("Nom obligatoire").isString(),
-];
+biereRouter.post("/bars/:id_bar/biere", biereValidator, ajouterBiere);
+biereRouter.put("/biere/:id_biere", biereValidator, modifierBiere);
+biereRouter.delete("/biere/:id_biere", supprimerBiere);
+biereRouter.get("/bars/:id_bar/biere", listeBieres);
+biereRouter.get("/biere/:id_biere", detailBiere);
 
-router.post("/bars/:id_bar/biere", validateBiere, ajouterBiere);
-router.put("/biere/:id_biere", validateBiere, modifierBiere);
-router.delete("/biere/:id_biere", supprimerBiere);
-router.get("/bars/:id_bar/biere", listeBieres);
-router.get("/biere/:id_biere", detailBiere);
-
-module.exports = router;
+module.exports = biereRouter;
