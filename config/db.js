@@ -1,16 +1,10 @@
-import sqlite3 from "sqlite3"
+const Sequelize  = require("sequelize")
 
-sqlite3.verbose()
+const db = new Sequelize({
+  dialect: "sqlite",
+  storage: "db.sqlite"
+})
 
-export const db = new sqlite3.Database('./src/utils/contact.sqlite')
+db.sync()
 
-export const initDB = () => {
-    const sqlContent = `CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY, name TEXT, phone TEXT)`
-    db.exec(sqlContent, (err) => {
-        if (err) {
-            console.log(`fail to load sql`)
-        } else {
-            console.log(`SQL content loaded`)
-        }
-    })
-}
+module.exports = db
