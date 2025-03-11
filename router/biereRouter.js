@@ -1,7 +1,7 @@
 const express = require("express")
 const {ajouterBiere, modifierBiere, supprimerBiere, listeBieres, detailBiere} = require("../controllers/biereController");
 const biereRouter = express.Router()
-const biereValidator = require("../middleware/barValidator.js");
+const biereValidator = require("../middleware/biereValidator.js");
 
 biereRouter.post("/bars/:id_bar/biere", biereValidator, ajouterBiere);
 biereRouter.put("/biere/:id_biere", biereValidator, modifierBiere);
