@@ -24,18 +24,6 @@ const Biere = db.define("Biere", {
     type: sequelize.FLOAT,
     allowNull: false,
   },
-  bars_id: { 
-    type: sequelize.INTEGER,
-    allowNull: false,
-    references: {
-      model: "Bar",
-      key: "id",
-    },
-    onDelete: "CASCADE",
-  },
 });
-
-Bar.hasMany(Biere, { foreignKey: "bars_id", as: "Bieres" });
-Biere.belongsTo(Bar, { foreignKey: "bars_id", as: "Bar" });
 
 module.exports = Biere;

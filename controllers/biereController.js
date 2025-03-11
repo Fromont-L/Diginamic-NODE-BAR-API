@@ -1,4 +1,4 @@
-const { Biere } = require("../model/biere");
+const { Biere } = require("../models/biere");
 const { validationResult } = require("express-validator");
 
 // Ajouter une bière

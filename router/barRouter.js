@@ -1,5 +1,5 @@
 const express = require("express")
-const {addBar,updateBar, deleteBar, getAllBars,  getBarDetails} = require("../controller/barController.js");
+const {addBar,updateBar, deleteBar, getAllBars,  getBarDetails} = require("../controllers/barController.js");
 const barRouter = express.Router()
 const barValidator = require("../middleware/barValidator.js")
 
