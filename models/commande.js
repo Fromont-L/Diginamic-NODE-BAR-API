@@ -8,22 +8,22 @@ const Commande = db.define("Commande", {
     autoIncrement: true,
   },
   name: {
-    type: DataTypes.STRING,
+    type: sequelize.STRING,
     allowNull: false,
   },
   prix: {
-    type: DataTypes.FLOAT,
+    type: sequelize.FLOAT,
     validate: {
       min: 0
     },
     allowNull: false,
   },
   date: {
-    type: DataTypes.DATE,
+    type: sequelize.DATE,
     allowNull: false,
   },
   status: {
-    type: DataTypes.ENUM('en cours', 'terminée'),
+    type: sequelize.ENUM('en cours', 'terminée'),
     allowNull: false,
   }
 });

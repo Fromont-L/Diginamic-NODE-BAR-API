@@ -10,5 +10,5 @@ Commande.belongsTo(Bar);
 Bar.hasMany(Commande);
 
 // Relation Many-to-many commande/bière
-Commande.belongsToMany(Biere, { through: CommandeBiere });
-Biere.belongsToMany(Commande, { through: CommandeBiere });
+Commande.belongsToMany(Biere, { through: "CommandeBiere" });
+Biere.belongsToMany(Commande, { through: "CommandeBiere" });
