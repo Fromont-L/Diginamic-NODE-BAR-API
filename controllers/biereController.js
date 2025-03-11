@@ -1,84 +1,76 @@
-const { Biere } = require("../models/biere");
-const { validationResult } = require("express-validator");
+const Biere = require("../models/biere");
+const Bar = require("../models/bar");
 
 // Ajouter une bière
-const ajouterBiere = (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
 
-  const { id_bar } = req.params;
-  const { name, description, degree, prix } = req.body;
+  const ajouterBiere = async (req, res) => {
+    const { id_bar } = req.params;
+    const { name, description, degree, prix } = req.body;
 
-  Bar.findByPk(id_bar)
-    .then((bar) => {
-      if (!bar) return res.status(404).json({ message: "Bar non trouvé" });
-      return Biere.create({ name, description, degree, prix }).then((biere) => {
-        bar.addBiere(biere);
-        res.status(201).json(biere);
-      });
-    })
-    .catch((error) => res.status(500).json(error));
+    const bar = await Bar.findByPk(id_bar);
+    if (!bar) {
+      return res.status(404).json({ message: "Bar non trouvé" });
+    }
+
+    const biere = await Biere.create({ name, description, degree, prix, bars_id: id_bar });
+    res.status(201).json(biere);
+  
 };
+
 
 // Modifier une bière
-const modifierBiere = (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const id_biere = parseInt(req.params.id_biere);
+const modifierBiere = async (req, res) => {
+  const { id_biere } = req.params;
   const { name, description, degree, prix } = req.body;
 
-  Biere.update(
+  const [updatedRows, updatedBieres] = await Biere.update(
     { name, description, degree, prix },
     { where: { id: id_biere }, returning: true }
-  )
-    .then(([updatedRows, updatedBieres]) => {
-      if (updatedRows === 0) {
-        return res.status(404).json({ message: "Bière non trouvée" });
-      }
-      res.json(updatedBieres[0]);
-    })
-    .catch((error) => res.status(500).json(error));
+  );
+
+  if (updatedRows === 0) {
+    return res.status(404).json({ message: "Bière non trouvée" });
+  }
+
+  res.json(updatedBieres[0]);
 };
+
 
 // Supprimer une bière
-const supprimerBiere = (req, res) => {
-  const id_biere = parseInt(req.params.id_biere);
+const supprimerBiere = async (req, res) => {
+  const { id_biere } = req.params;
 
-  Biere.findByPk(id_biere)
-    .then((biere) => {
-      if (!biere) return res.status(404).json({ message: "Bière non trouvée" });
-      return biere.destroy().then(() => res.json({ message: "Bière supprimée avec succès" }));
-    })
-    .catch((error) => res.status(500).json(error));
+  const biere = await Biere.findByPk(id_biere);
+  if (!biere) {
+    return res.status(404).json({ message: "Bière non trouvée" });
+  }
+
+  await biere.destroy();
+  res.json({ message: "Bière supprimée avec succès" });
 };
 
-// Liste des bières
-const listeBieres = (req, res) => {
-  const id_bar = parseInt(req.params.id_bar);
+// Liste des bières d'un bar
+const listeBieres = async (req, res) => {
+  const { id_bar } = req.params;
 
-  Bar.findByPk(id_bar, { include: Biere })
-    .then((bar) => {
-      if (!bar) return res.status(404).json({ message: "Bar non trouvé" });
-      res.json(bar.Bieres);
-    })
-    .catch((error) => res.status(500).json(error));
+  const bar = await Bar.findByPk(id_bar, { include: Biere });
+  if (!bar) {
+    return res.status(404).json({ message: "Bar non trouvé" });
+  }
+
+  res.json(bar.Bieres);
 };
 
-// Détail bière
-const detailBiere = (req, res) => {
-  const id_biere = parseInt(req.params.id_biere);
+// Détail d'une bière
+const detailBiere = async (req, res) => {
+  const { id_biere } = req.params;
 
-  Biere.findByPk(id_biere)
-    .then((biere) => {
-      if (!biere) return res.status(404).json({ message: "Bière non trouvée" });
-      res.json(biere);
-    })
-    .catch((error) => res.status(500).json(error));
-};
+  const biere = await Biere.findByPk(id_biere);
+  if (!biere) {
+    return res.status(404).json({ message: "Bière non trouvée" });
+  }
+
+  res.json(biere);
+}; 
 
 module.exports = { ajouterBiere, modifierBiere, supprimerBiere, listeBieres, detailBiere };

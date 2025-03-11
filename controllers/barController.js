@@ -1,5 +1,5 @@
 const Bars = require("../models/bar");
-// const Bieres = require("../models/biere")
+const Bieres = require("../models/biere");
 // const Commandes =("../models/commande")
 
 const addBar = async (req, res) => {
