@@ -1,7 +1,7 @@
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 
 const Bars = require("../models/bar");
-// const Bieres = require("../models/biere")
+const Bieres = require("../models/biere")
 // const Commandes =("../models/commande")
 
 const ajouterBar = async (req, res) => {
@@ -30,12 +30,12 @@ const supprimerBar = async (req, res) => {
   res.json({ message: "Bar supprimé" });
 };
 
-const getAllBars = async (req, res) => {
+const listeBars = async (req, res) => {
   const bars = await Bars.findAll();
   res.json(bars);
 };
 
-const getBarDetails = async (req, res) => {
+const detailBiere = async (req, res) => {
   const bar = await Bars.findByPk(req.params.id);
   if (!bar) return res.status(404).json({ message: "Bar non trouvé" });
   res.json(bar);
@@ -101,15 +101,25 @@ const getBarsParNom = async (req, res) => {
 };
 
 const getDegreeBiereMoyen = async (req, res) => {
+  const barId = req.params.id;
+  const bar = await Bars.findByPk(barId);
 
+  if (!bar) return res.status(404).json({ message: "Bar non trouvé" });
+
+  const degreeMoyen = await Bieres.findAll({
+    where: { bars_id: barId },
+    attributes: [[Sequelize.fn('AVG', Sequelize.col('degree')), 'degreeMoyen']],
+  });
+
+  res.json({ degreeMoyen: degreeMoyen[0]?.degreeMoyen || 0 })
 };
 
 module.exports = {
   ajouterBar,
   modifierBar,
   supprimerBar,
-  getAllBars,
-  getBarDetails,
+  listeBars,
+  detailBiere,
   getBarCommandesParDate,
   getBarCommandesParPrix,
   getBarsParVille,

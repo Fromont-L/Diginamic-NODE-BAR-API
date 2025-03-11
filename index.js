@@ -9,7 +9,7 @@ const db = require("./config/db")
 const barRouter = require("./router/barRouter.js")
 const biereRouter = require("./router/biereRouter.js")
 
-// require("./models/index.js")
+require("./models/index.js")
 app.use(barRouter)
 app.use(biereRouter);
 
