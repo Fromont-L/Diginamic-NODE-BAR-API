@@ -44,3 +44,20 @@ barRouter.get("/bars/:id/commandes", (req, res, next) => {
 barRouter.get("/bars/:id/biere", getBieresTriees);
 
 module.exports = barRouter
+
+/**
+ * @swagger
+ * /bars:
+ *   get:
+ *     summary: Retrieve a list of bars
+ *     responses:
+ *       200:
+ *         description: A list of bars
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '../models/'
+ */
+
