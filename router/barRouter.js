@@ -43,4 +43,5 @@ barRouter.get("/bars/:id/commandes", (req, res, next) => {
 
 barRouter.get("/bars/:id/biere", getBieresTriees);
 
+
 module.exports = barRouter

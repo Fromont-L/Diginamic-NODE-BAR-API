@@ -1,6 +1,10 @@
 //const Biere = require("../models/biere");
 const Commande = require("../models/commande");
 const Bar = require("../models/bar");
+const Bieres = require("../models/biere");
+
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
 
 // Ajouter une commande à un bar
 const ajouterCommande = async (req, res) => {
@@ -12,7 +16,7 @@ const ajouterCommande = async (req, res) => {
     return res.status(404).json({ message: "Bar non trouvé" });
   }
 
-  const commande = await Commande.create({ name, prix, date, status, bars_id: id_bar });
+  const commande = await Commande.create({ name, prix, date, status, BarId: id_bar });
   res.status(201).json(commande);
 };
 
@@ -70,5 +74,47 @@ const detailCommande = async (req, res) => {
   res.json(commande);
 };
 
-module.exports = { ajouterCommande, modifierCommande, supprimerCommande, listeCommandes, detailCommande };
+// Avancées 2:
+
+const pdfCommande = async (req, res) => {
+  const commandeId = req.params.id_commande;
+  const commande = await Commande.findByPk(commandeId, {
+    include: [{
+      model: Bieres,
+      through: 'CommandeBiere'
+    }]
+  });
+
+  if (!commande) return res.status(404).json({ message: "Commande non trouvée" });
+
+  const doc = new PDFDocument();
+  const filename = `commande_${commandeId}.pdf`;
+  const filepath = `../public/pdfs/${filename}`;
+
+  doc.pipe(fs.createWriteStream(filepath));
+
+  doc.text(`Détails de la commande #${commandeId}`, { align: 'center' });
+  doc.moveDown();
+  doc.text(`Date: ${commande.date}`);
+  doc.text(`Status: ${commande.status}`);
+  doc.text(`Prix: ${commande.prix} €`);
+  doc.moveDown();
+  doc.text('Bières:');
+
+  commande.Bieres.forEach(biere => {
+    doc.text(`- ${biere.name}: ${biere.degree}°, ${biere.prix} €`);
+  });
+
+  doc.end();
+
+  res.download(filepath, filename, (err) => {
+    if (err) {
+      console.error('Error downloading file:', err);
+      res.status(500).json({ message: 'Erreur lors du téléchargement du fichier' });
+    }
+    fs.unlinkSync(filepath);
+  });
+};
+
+module.exports = { ajouterCommande, modifierCommande, supprimerCommande, listeCommandes, detailCommande, pdfCommande };
 

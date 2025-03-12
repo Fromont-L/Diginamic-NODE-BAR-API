@@ -192,19 +192,25 @@ const getCommandesFiltrees = async (req, res) => {
 };
 
 const getBieresTriees = async (req, res) => {
-  const barId = req.params.id; 
-  const { sort = 'asc'} = req.query;
+  const barId = req.params.id_bar;
+  const { sort = 'asc', limit, offset, degree_min, degree_max, prix_min, prix_max } = req.query;
 
   const bar = await Bars.findByPk(barId);
   if (!bar) return res.status(404).json({ message: "Bar non trouvé" });
 
-    const bieres = await Bieres.findAll({
-      where: { BarId: barId },
-      order: [['name', sort]]
-    });
-    res.json(bieres);
-};
+  const filters = { BarId: barId };
+  if (degree_min && degree_max) filters.degree = { [Op.between]: [degree_min, degree_max] };
+  if (prix_min && prix_max) filters.prix = { [Op.between]: [prix_min, prix_max] };
 
+  const bieres = await Bieres.findAndCountAll({
+    where: filters,
+    order: [['name', sort]],
+    limit: limit ? parseInt(limit) : undefined,
+    offset: offset ? parseInt(offset) : undefined,
+  });
+
+  res.json(bieres);
+};
 
 
 module.exports = {
