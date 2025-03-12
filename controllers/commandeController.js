@@ -77,7 +77,7 @@ const detailCommande = async (req, res) => {
 // Avancées 2:
 
 const pdfCommande = async (req, res) => {
-  const commandeId = req.params.id_commande;
+  const commandeId = req.params.id;
   const commande = await Commande.findByPk(commandeId, {
     include: [{
       model: Bieres,
@@ -89,9 +89,10 @@ const pdfCommande = async (req, res) => {
 
   const doc = new PDFDocument();
   const filename = `commande_${commandeId}.pdf`;
-  const filepath = `../public/pdfs/${filename}`;
+  const filepath = `./public/pdfs/${filename}`;
 
-  doc.pipe(fs.createWriteStream(filepath));
+  const stream = fs.createWriteStream(filepath);
+  doc.pipe(stream);
 
   doc.text(`Détails de la commande #${commandeId}`, { align: 'center' });
   doc.moveDown();
@@ -107,14 +108,26 @@ const pdfCommande = async (req, res) => {
 
   doc.end();
 
-  res.download(filepath, filename, (err) => {
-    if (err) {
-      console.error('Error downloading file:', err);
-      res.status(500).json({ message: 'Erreur lors du téléchargement du fichier' });
-    }
-    fs.unlinkSync(filepath);
+  stream.on('finish', () => {
+    res.download(filepath, filename, (err) => {
+      if (err) {
+        console.error('Error downloading file:', err);
+        res.status(500).json({ message: 'Erreur lors du téléchargement du fichier' });
+      }
+      fs.unlink(filepath, (unlinkErr) => {
+        if (unlinkErr) {
+          console.error('Error deleting file:', unlinkErr);
+        }
+      });
+    });
+  });
+
+  stream.on('error', (err) => {
+    console.error('Error creating PDF:', err);
+    res.status(500).json({ message: 'Erreur lors de la création du PDF' });
   });
 };
+
 
 module.exports = { ajouterCommande, modifierCommande, supprimerCommande, listeCommandes, detailCommande, pdfCommande };
 

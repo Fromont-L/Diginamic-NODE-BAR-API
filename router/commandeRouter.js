@@ -17,7 +17,7 @@ commandeRouter.delete("/commandes/:id", supprimerCommande);
 commandeRouter.get("/bars/:id_bar/commandes", listeCommandes);
 commandeRouter.get("/commandes/:id", detailCommande);
 
-commandeRouter.get("/commandes/detais/:id", pdfCommande);
+commandeRouter.get("/commandes/details/:id", pdfCommande);
 
 
 module.exports = commandeRouter;
