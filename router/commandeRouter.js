@@ -7,7 +7,8 @@ const {
     modifierCommande,
     supprimerCommande,
     listeCommandes,
-    detailCommande
+    detailCommande,
+    pdfCommande
 } = require("../controllers/commandeController.js");
 
 commandeRouter.post("/bars/:id_bar/commandes", ajouterCommande);
@@ -16,6 +17,7 @@ commandeRouter.delete("/commandes/:id", supprimerCommande);
 commandeRouter.get("/bars/:id_bar/commandes", listeCommandes);
 commandeRouter.get("/commandes/:id", detailCommande);
 
+commandeRouter.get("/commandes/details/:id", pdfCommande);
 
 module.exports = commandeRouter;
 
