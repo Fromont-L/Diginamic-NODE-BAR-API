@@ -2,6 +2,7 @@ const db = require("../config/db");
 const sequelize = require("sequelize");
 
 const Commande = db.define("Commande", {
+
     id: {
         type: sequelize.INTEGER,
         primaryKey: true,

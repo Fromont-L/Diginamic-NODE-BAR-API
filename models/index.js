@@ -10,14 +10,5 @@ Bar.hasMany(Biere);
 //Bar.hasMany(Commande); 
 
 // Relation Many-to-many commande/bière
-
-
-
-
-
-// Exemples :
-// Player.belongsToMany(Tournament, { through: "TournamentPlayer" });
-// Tournament.belongsToMany(Player, { through: "TournamentPlayer" });
-
-// Match.belongsTo(Player);
-// Player.hasMany(Match);
+Commande.belongsToMany(Biere, { through: "CommandeBiere" });
+Biere.belongsToMany(Commande, { through: "CommandeBiere" });

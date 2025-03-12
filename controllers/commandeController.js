@@ -71,3 +71,4 @@ const detailCommande = async (req, res) => {
 };
 
 module.exports = { ajouterCommande, modifierCommande, supprimerCommande, listeCommandes, detailCommande };
+
