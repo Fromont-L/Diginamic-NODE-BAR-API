@@ -3,20 +3,11 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 require("dotenv").config();
+const { swaggerUi, specs } = require('./config/swaggerConfig.js');
 
 // BDD
 const db = require("./config/db")
-const barRouter = require("./router/barRouter.js")
-const biereRouter = require("./router/biereRouter.js")
-const commandeRouter = require("./router/commandeRouter.js")
-const biereCommandeRouter = require("./router/biereCommandeRouter.js")
-
 require("./models/index.js")
-app.use(barRouter)
-app.use(biereRouter);
-app.use(commandeRouter);
-app.use(biereCommandeRouter);
-
 
 db.authenticate()
   .then(() => {
@@ -26,9 +17,22 @@ db.authenticate()
     console.error('Unable to connect to the database:', err)
   })
 
+// ROUTES
+const barRouter = require("./router/barRouter.js")
+const biereRouter = require("./router/biereRouter.js")
+const commandeRouter = require("./router/commandeRouter.js")
+const biereCommandeRouter = require("./router/biereCommandeRouter.js")
+app.use(barRouter)
+app.use(biereRouter);
+app.use(commandeRouter);
+app.use(biereCommandeRouter);
 
-const PORT = 3000;
 
+// SWAGGER
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log("Tourne sur le port : ", PORT);
+  console.log(`Server is running on port ${PORT}`);
 });
