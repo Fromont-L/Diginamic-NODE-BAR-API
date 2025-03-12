@@ -9,11 +9,13 @@ const db = require("./config/db")
 const barRouter = require("./router/barRouter.js")
 const biereRouter = require("./router/biereRouter.js")
 const commandeRouter = require("./router/commandeRouter.js")
+const biereCommandeRouter = require("./router/biereCommandeRouter")
 
 require("./models/index.js")
 app.use(barRouter)
 app.use(biereRouter);
 app.use(commandeRouter);
+app.use(biereCommandeRouter);
 
 
 db.authenticate()

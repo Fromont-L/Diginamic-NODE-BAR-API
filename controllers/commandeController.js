@@ -12,7 +12,7 @@ const ajouterCommande = async (req, res) => {
     return res.status(404).json({ message: "Bar non trouvé" });
   }
 
-  const commande = await Commande.create({ name, prix, date, status, bars_id: id_bar });
+  const commande = await Commande.create({ name, prix, date, status, BarId: id_bar });
   res.status(201).json(commande);
 };
 
