@@ -9,7 +9,6 @@ const Biere = db.define("Biere", {
   },
   name: {
     type: sequelize.STRING,
-    unique: true,
     allowNull: false,
   },
   description: {

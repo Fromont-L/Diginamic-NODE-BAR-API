@@ -12,7 +12,7 @@ const Bar = require("../models/bar");
       return res.status(404).json({ message: "Bar non trouvé" });
     }
 
-    const biere = await Biere.create({ name, description, degree, prix, bars_id: id_bar });
+    const biere = await Biere.create({ name, description, degree, prix, BarId: id_bar });
     res.status(201).json(biere);
   
 };
