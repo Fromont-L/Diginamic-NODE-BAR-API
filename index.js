@@ -31,7 +31,7 @@ app.use(biereCommandeRouter);
 // SWAGGER
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-
+// Lancement serveur
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
