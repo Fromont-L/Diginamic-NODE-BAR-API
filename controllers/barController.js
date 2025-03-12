@@ -192,7 +192,7 @@ const getCommandesFiltrees = async (req, res) => {
 };
 
 const getBieresTriees = async (req, res) => {
-  const barId = req.params.id_bar;
+  const barId = req.params.id;
   const { sort = 'asc', limit, offset, degree_min, degree_max, prix_min, prix_max } = req.query;
 
   const bar = await Bars.findByPk(barId);
