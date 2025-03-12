@@ -2,7 +2,7 @@ const { Op, Sequelize } = require("sequelize");
 
 const Bars = require("../models/bar");
 const Bieres = require("../models/biere");
-// const Commandes =("../models/commande")
+const Commandes = require("../models/commande");
 
 const ajouterBar = async (req, res) => {
   const newBar = await Bars.create(req.body);
@@ -22,9 +22,9 @@ const supprimerBar = async (req, res) => {
   const bar = await Bars.findByPk(barId);
   if (!bar) return res.status(404).json({ message: "Bar non trouvé" });
 
-  await Bieres.destroy({where: {bar_id : barId}});
+  await Bieres.destroy({ where: { BarId: barId } });
 
-  await Commandes.destroy({where: {bar_id : barId}})
+  await Commandes.destroy({ where: { BarId: barId } });
 
   await bar.destroy();
   res.json({ message: "Bar supprimé" });
@@ -49,14 +49,11 @@ const getBarCommandesParDate = async (req, res) => {
   const date = req.query.date;
 
   if (!bar) return res.status(404).json({ message: "Bar non trouvé" });
-  
+
   const commandes = await Commandes.findAll({
-    where: {bar_id : barId, 
-      date: date
-    },
+    where: { BarId: barId, date: date },
   });
   res.json(commandes);
-
 };
 
 const getBarCommandesParPrix = async (req, res) => {
@@ -67,35 +64,33 @@ const getBarCommandesParPrix = async (req, res) => {
 
   if (!bar) return res.status(404).json({ message: "Bar non trouvé" });
   const commandes = await Commandes.findAll({
-    where: {bar_id : barId, 
-      prix: {[Op.between]: [prixMin, prixMax]}
-    },
+    where: { BarId: barId, prix: { [Op.between]: [prixMin, prixMax] } },
   });
   res.json(commandes);
 };
 
 const getBarsParVille = async (req, res) => {
   const ville = req.query.ville;
-  
+
   const bars = await Bars.findAll({
     where: {
       adresse: {
-        [Op.like]: `%${ville}%`
-      }
-    }
+        [Op.like]: `%${ville}%`,
+      },
+    },
   });
   res.json(bars);
 };
 
 const getBarsParNom = async (req, res) => {
   const name = req.query.name;
-  
+
   const bars = await Bars.findAll({
     where: {
       name: {
-        [Op.like]: `%${name}%`
-      }
-    }
+        [Op.like]: `%${name}%`,
+      },
+    },
   });
   res.json(bars);
 };
@@ -103,16 +98,114 @@ const getBarsParNom = async (req, res) => {
 const getDegreeBiereMoyen = async (req, res) => {
   const barId = req.params.id;
   const bar = await Bars.findByPk(barId);
-
   if (!bar) return res.status(404).json({ message: "Bar non trouvé" });
 
-  const degreeMoyen = await Bieres.findAll({
-    where: { bars_id: barId },
-    attributes: [[Sequelize.fn('AVG', Sequelize.col('degree')), 'degreeMoyen']],
+  const bieres = await Bieres.findAll({
+    where: { BarId: barId }
+  });
+  
+  let degreeMoyen = 0;
+  if (bieres.length > 0) {
+    const somme = bieres.reduce((total, biere) => total + biere.degree, 0);
+    degreeMoyen = somme / bieres.length;
+  }
+  res.json({ degreeMoyen: degreeMoyen });
+};
+
+// Avancées 2 :
+
+const getDegreeBiereMoyenParPrix = async (req, res) => {
+  const barId = req.params.id;
+  const prix_min = parseFloat(req.query.prix_min);
+  const prix_max = parseFloat(req.query.prix_max);
+
+  const bar = await Bars.findByPk(barId);
+  if (!bar) return res.status(404).json({ message: "Bar non trouvé" });
+
+  const bieres = await Bieres.findAll({
+    where: {
+      BarId: barId,
+      prix: { [Op.between]: [prix_min, prix_max] }
+    }
   });
 
-  res.json({ degreeMoyen: degreeMoyen[0]?.degreeMoyen || 0 })
+  let degreeMoyen = 0;
+  if (bieres.length > 0) {
+    const somme = bieres.reduce((total, biere) => total + biere.degree, 0);
+    degreeMoyen = somme / bieres.length;
+  }
+
+  res.json({ degreeMoyen: degreeMoyen });
 };
+
+
+const getDegreeBiereMoyenParDate = async (req, res) => {
+  const barId = req.params.id;
+  const { date } = req.query;
+
+  const bar = await Bars.findByPk(barId);
+  if (!bar) return res.status(404).json({ message: "Bar non trouvé" });
+
+  const commandes = await Commandes.findAll({
+    where: { 
+      BarId: barId,
+      date: date
+    },
+    include: [{
+      model: Bieres,
+      through: 'CommandeBiere' 
+    }]
+  });
+  
+  let bieres = [];
+  commandes.forEach(commande => {
+    if (commande.Bieres && commande.Bieres.length > 0) {
+      bieres = [...bieres, ...commande.Bieres];
+    }
+  });
+
+  let degreeMoyen = 0;
+  if (bieres.length > 0) {
+    const somme = bieres.reduce((total, biere) => total + biere.degree, 0);
+    degreeMoyen = somme / bieres.length;
+  }
+
+  res.json({ degreeMoyen: degreeMoyen });
+};
+
+
+const getCommandesFiltrees = async (req, res) => {
+  const barId = req.params.id; 
+  const { date, prix_min, prix_max, status, name } = req.query;
+
+  const bar = await Bars.findByPk(barId);
+  if (!bar) return res.status(404).json({ message: "Bar non trouvé" });
+
+  const filters = { BarId: barId };
+  if (date) filters.date = date;
+  if (prix_min && prix_max) filters.prix = { [Op.between]: [prix_min, prix_max] };
+  if (status) filters.status = status;
+  if (name) filters.name = { [Op.like]: `%${name}%` };
+
+  const commandes = await Commandes.findAll({ where: filters });
+  res.json(commandes);
+};
+
+const getBieresTriees = async (req, res) => {
+  const barId = req.params.id; 
+  const { sort = 'asc'} = req.query;
+
+  const bar = await Bars.findByPk(barId);
+  if (!bar) return res.status(404).json({ message: "Bar non trouvé" });
+
+    const bieres = await Bieres.findAll({
+      where: { BarId: barId },
+      order: [['name', sort]]
+    });
+    res.json(bieres);
+};
+
+
 
 module.exports = {
   ajouterBar,
@@ -124,5 +217,9 @@ module.exports = {
   getBarCommandesParPrix,
   getBarsParVille,
   getBarsParNom,
-  getDegreeBiereMoyen
+  getDegreeBiereMoyen,
+  getDegreeBiereMoyenParPrix,
+  getDegreeBiereMoyenParDate,
+  getCommandesFiltrees,
+  getBieresTriees,
 };
