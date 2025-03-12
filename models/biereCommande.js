@@ -1,36 +1,15 @@
 const db = require("../config/db");
 const sequelize = require("sequelize");
-const Biere = require("./biere");
-const Commande = require("./commande");
 
 const BiereCommande = db.define("BiereCommande", {
-  id: {
+  BiereId: {
     type: sequelize.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
+    references: { model: "Bieres", key: "id" },
   },
-  biere_id: {
+  CommandeId: {
     type: sequelize.INTEGER,
-    allowNull: false,
-    references: {
-      model: Biere,
-      key: "id",
-    },
-    onDelete: "CASCADE",
+    references: { model: "Commandes", key: "id" },
   },
-  commande_id: {
-    type: sequelize.INTEGER,
-    allowNull: false,
-    references: {
-      model: Commande,
-      key: "id",
-    },
-    onDelete: "CASCADE",
-  },
-});
-
-// Définition des relations
-Biere.belongsToMany(Commande, { through: BiereCommande, foreignKey: "BiereId" });
-Commande.belongsToMany(Biere, { through: BiereCommande, foreignKey: "CommandeId" });
+}, {onDelete: "CASCADE"});
 
 module.exports = BiereCommande;
