@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+:root {
+    --clr-black: #272422;
+    --clr-white: #F1F1F1;
+    --clr-orange: #D27A4F;
+    --clr-blue: #445E75;
+    --clr-yellow:  "F6BF6F";
+    --clr-brown: #3D2C24;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+* {
+    font-family: "Montserrat", sans-serif;
+}
+
+body {
+    background-color: var(--clr-black);
+    color: var(--clr-white);
+    width: 90%;
+    max-width: 1440px;
+    margin: 0 auto;
+    position: relative;
+}
+
+h1, h2 {
+    font-family: "Merriweather", serif;
+}
