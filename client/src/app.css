@@ -7,6 +7,8 @@
     --clr-blue: #445E75;
     --clr-yellow:  "F6BF6F";
     --clr-brown: #3D2C24;
+    --font-primary: "Montserrat", sans-serif;
+    --font-secondary: "Merriweather", serif;
 }
 
 html {
@@ -14,7 +16,7 @@ html {
 }
 
 * {
-    font-family: "Montserrat", sans-serif;
+    font-family: var(--font-primary);
 }
 
 body {
@@ -26,6 +28,6 @@ body {
     position: relative;
 }
 
-h1, h2 {
-    font-family: "Merriweather", serif;
+h1, h2, button {
+    font-family: var(--font-secondary);
 }
