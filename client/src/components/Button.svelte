@@ -6,7 +6,7 @@
   </script>
   
   <button
-    class={`w-xs h-14 rounded ${textColor} ${color} text-2xl`}
+    class={`w-xs h-14 rounded ${textColor} ${color} text-2xl cursor-pointer drop-shadow-md hover:scale-105 duration-300 ease-in-out`}
     on:click={onClick}
   >
     {text}
