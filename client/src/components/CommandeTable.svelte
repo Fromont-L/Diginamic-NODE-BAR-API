@@ -37,8 +37,6 @@
       const response = await axios.get(
         `http://localhost:3000/bars/${barId}/commandes`
       );
-      console.log('commandes depuis bdd:', response.data)
-
       const fetchedCommandes = response.data;
       fetchedCommandes.forEach((commande, index) => {
         if (index < commandes.length) {
@@ -46,8 +44,6 @@
           commandes[index].date = formatDate(commande.date);
         }
       });
-
-      console.log("commandes:", commandes);
     } catch (error) {
       console.error("Erreur lors de la récupération des Commandes:", error);
     }
