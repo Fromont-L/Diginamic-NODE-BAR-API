@@ -3,6 +3,8 @@
     import { page } from '$app/stores';
     import axios from 'axios';
     import imagePub from "../../../assets/image.png";
+  import BiereTable from '../../../components/BiereTable.svelte';
+  import CommandeTable from '../../../components/CommandeTable.svelte';
     
     let barData = null;
     let error = false;
@@ -41,7 +43,10 @@
         </div>
       </div>
     </div>
-
+    <div class="flex justify-between">
+      <BiereTable barId={$page.params.id}/>
+      <CommandeTable barId={$page.params.id}/>
+    </div>
   {:else if error}
     <p class="text-red-500 text-lg font-semibold">Erreur lors du chargement des données</p>
 
