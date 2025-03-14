@@ -156,5 +156,3 @@ BIERE_COMMANDE :
 # Tester les routes avec Jest et Supertest
 
 # Ajouter une authentification via JWT et accepter les requêtes POST, PUT et DELETE seulement si un bar est authentifié (ajoutez donc les champs email, password et token au modèle Bar).
-
-# Venir me voir pour un 3ème bonus 
