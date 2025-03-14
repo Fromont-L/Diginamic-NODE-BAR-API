@@ -4,6 +4,7 @@
     import axios from 'axios';
     import imagePub from "../../../assets/image.png";
   import BiereTable from '../../../components/BiereTable.svelte';
+  import CommandeTable from '../../../components/CommandeTable.svelte';
     
     let barData = null;
     let error = false;
@@ -29,7 +30,10 @@
       <p>{barData.description}</p>
       <img src={imagePub} alt={barData.name} />
     </div>
-    <BiereTable barId={$page.params.id}/>
+    <div class="flex justify-between">
+      <BiereTable barId={$page.params.id}/>
+      <CommandeTable barId={$page.params.id}/>
+    </div>
   {:else if error}
     <p>Erreur lors du chargement des données</p>
 

@@ -3,72 +3,101 @@
   import axios from "axios";
   import Button from "./Button.svelte";
 
-  let bieres = Array.from({ length: 10 }, (_, index) => ({
+  let commandes = Array.from({ length: 10 }, (_, index) => ({
     id: `temp-${index}`,
     name: "",
-    degree: "",
+    date: "",
     prix: "",
+    status: "",
   }));
   export let barId;
+
+  // 2 méthodes pour changer le format de date ISO :
+  
+  // function formatDate(isoDate) {
+  //   const date = new Date(isoDate);
+  //   const jour = date.getDate().toString().padStart(2, '0');
+  //   const mois = (date.getMonth() + 1).toString().padStart(2, '0');
+  //   const annee = date.getFullYear();
+  //   return `${jour}/${mois}/${annee}`;
+  // }
+
+  function formatDate(isoDate) {
+  const date = new Date(isoDate);
+  const formatted = date.toLocaleDateString('fr-FR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
+  return formatted.replace(/\//g, '/');
+}
 
   onMount(async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/bars/${barId}/biere`
+        `http://localhost:3000/bars/${barId}/commandes`
       );
-      const fetchedBieres = response.data.rows;
+      console.log('commandes depuis bdd:', response.data)
 
-      fetchedBieres.forEach((biere, index) => {
-        if (index < bieres.length) {
-          bieres[index] = biere;
+      const fetchedCommandes = response.data;
+      fetchedCommandes.forEach((commande, index) => {
+        if (index < commandes.length) {
+          commandes[index] = commande;
+          commandes[index].date = formatDate(commande.date);
         }
       });
 
+      console.log("commandes:", commandes);
     } catch (error) {
-      console.error("Erreur lors de la récupération des bières:", error);
+      console.error("Erreur lors de la récupération des Commandes:", error);
     }
   });
 
-  function addBeer() {
-    console.log("Ajouter une bière");
+  function addCommande() {
+    console.log("Ajouter une commande");
   }
 
-  function deleteBeer(id) {
-    console.log("Supprimer la bière avec l'ID:", id);
+  function deleteCommande(id) {
+    console.log("Supprimer la commande avec l'ID:", id);
   }
 
-  function editBeer(id) {
-    console.log("Modifier la bière avec l'ID:", id);
+  function editCommande(id) {
+    console.log("Modifier la commande avec l'ID:", id);
   }
 </script>
 
-<div class="flex flex-col items-center gap-8 w-4/10 my-[10vh]">
+<div class="flex flex-col items-center gap-8 w-5/10 my-[10vh]">
   <table class="w-full border-collapse text-[var(--clr-black)]">
     <thead>
       <tr >
-        <th class="w-5/10 py-2 px-2 bg-[var(--clr-yellow)] text-xl rounded-tl-sm">Bières</th>
-        <th class="w-2/10 py-2 px-2 bg-[var(--clr-yellow)] text-xl">Degrés</th>
+        <th class="w-5/10 py-2 px-2 bg-[var(--clr-yellow)] text-xl rounded-tl-sm">Commandes</th>
+        <th class="w-2/10 py-2 px-2 bg-[var(--clr-yellow)] text-xl">Date</th>
         <th class="w-2/10 py-2 px-2 bg-[var(--clr-yellow)] text-xl">Prix</th>
+        <th class="w-1/10 py-2 px-2 bg-[var(--clr-yellow)] text-xl">Status</th>
         <th class="w-1/10 py-2 px-2 bg-[var(--clr-yellow)] text-xl rounded-tr-sm"></th>
       </tr>
     </thead>
     <tbody>
-      {#each bieres as biere (biere.id)}
+      {#each commandes as commande (commande.id)}
         <tr>
           <td
             class=" h-12 px-2 border-b border-gray-300 bg-[var(--clr-white)] text-center"
-            >{biere.name}</td
+            >{commande.name}</td
           >
           <td
             class=" h-12 px-2 border-b border-gray-300 bg-[var(--clr-white)] text-center"
-            >{biere.degree}</td
+            >{commande.date}</td
           >
           <td
             class="h-12 px-2 border-b border-gray-300 bg-[var(--clr-white)] text-center"
-            >{biere.prix}</td
+            >{commande.prix}</td
+          >
+          <td
+            class="h-12 px-2 border-b border-gray-300 bg-[var(--clr-white)] text-center"
+            >{commande.status}</td
           >
           <td class=" h-12 px-2 border-b border-gray-300 bg-[var(--clr-white)] flex items-center justify-center gap-2">
-            {#if biere.name}
+            {#if commande.name}
               <svg
                 class="w-6 h-6 text-black cursor-pointer"
                 fill="none"
@@ -76,7 +105,7 @@
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
                 aria-hidden="true"
-                on:click={() => editBeer(biere.id)}
+                on:click={() => editCommande(commande.id)}
               >
                 <path
                   stroke-linecap="round"
@@ -92,7 +121,7 @@
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
                 aria-hidden="true"
-                on:click={() => deleteBeer(biere.id)}
+                on:click={() => deleteCommande(commande.id)}
               >
                 <path
                   stroke-linecap="round"
@@ -109,5 +138,5 @@
     </tbody>
   </table>
 
-  <Button text="Ajouter une bière" onClick={addBeer} />
+  <Button text="Ajouter une commande" onClick={addCommande} />
 </div>
