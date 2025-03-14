@@ -65,7 +65,7 @@
       if (mode === "add") {
         await axios.post(`http://localhost:3000/bars/${barId}/biere`, item);
       } else {
-        await axios.put(`http://localhost:3000/bars/${barId}/biere/${item.id}`, item);
+        await axios.put(`http://localhost:3000/biere/${item.id}`, item);
       }
       await loadBieres();
     } catch (error) {
