@@ -3,6 +3,7 @@
     import { page } from '$app/stores';
     import axios from 'axios';
     import imagePub from "../../../assets/image.png";
+  import BiereTable from '../../../components/BiereTable.svelte';
     
     let barData = null;
     let error = false;
@@ -28,7 +29,7 @@
       <p>{barData.description}</p>
       <img src={imagePub} alt={barData.name} />
     </div>
-
+    <BiereTable barId={$page.params.id}/>
   {:else if error}
     <p>Erreur lors du chargement des données</p>
 
