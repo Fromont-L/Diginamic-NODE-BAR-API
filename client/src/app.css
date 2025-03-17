@@ -9,6 +9,7 @@
     --clr-brown: #3D2C24;
     --font-primary: "Montserrat", sans-serif;
     --font-secondary: "Merriweather", serif;
+    --clr-white-bg: rgb(241,241,241, 0.15);
 }
 
 html {
@@ -19,7 +20,7 @@ html {
     font-family: var(--font-primary);
 }
 
-body {
+body, .default-width {
     background-color: var(--clr-black);
     color: var(--clr-white);
     width: 90%;
@@ -31,3 +32,10 @@ body {
 h1, h2, button {
     font-family: var(--font-secondary);
 }
+
+.full-width {
+    width: 99.4vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+  }
+  

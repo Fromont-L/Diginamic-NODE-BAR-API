@@ -1,9 +1,10 @@
 <script>
+  import Hero from "../components/Hero.svelte";
+
 
 </script>
 
-<main>
-
-    <p>Route /</p>
+<main >
+    <Hero/>
 
 </main>

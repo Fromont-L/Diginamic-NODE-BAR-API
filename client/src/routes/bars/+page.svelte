@@ -19,9 +19,8 @@
     alert('Bouton cliqué !');
     // Mettre ici l'ouverture de la modale pour ajout d'un bar
   }
-
-
   </script>
+
   <div class="flex flex-col items-center gap-4 pb-[5vh]">
       <h1 class="text-7xl pb-[5vh]">Les David’s Pub</h1>
       <Button text="Ajouter un bar" textColor="text-white" color="bg-[var(--clr-blue)]" {onClick} />
