@@ -64,7 +64,7 @@ let showStep2Modal = false;
     name: "",
     date: new Date().toISOString().split("T")[0],
     prix: "",
-    status: "En attente",
+    status: "Brouillon",
     bieres: [], 
   };
   let modalMode = "add";
@@ -75,7 +75,7 @@ let showStep2Modal = false;
       name: "",
       date: new Date().toISOString().split("T")[0],
       prix: "",
-      status: "En attente",
+      status: "Brouillon",
       bieres: [],
     };
     modalMode = "add";
@@ -341,7 +341,7 @@ if (currentCommande.bieres.includes(undefined)) {
         bind:value={currentCommande.status}
         class="w-4/6 p-2 bg-[var(--clr-white)] rounded text-black"
       >
-        <option value="En attente">Brouillon</option>
+        <option value="Brouillon">Brouillon</option>
         <option value="En cours">En cours</option>
         <option value="Terminée">Terminée</option>
       </select>
