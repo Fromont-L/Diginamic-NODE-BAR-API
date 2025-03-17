@@ -21,12 +21,12 @@ const ajouterCommande = async (req, res) => {
 
 // Modifier une commande d'un bar
 const modifierCommande = async (req, res) => {
-  const { id_commande } = req.params;
+  const { id } = req.params;
   const { name, prix, date, status } = req.body;
 
   const [updatedRows, updatedCommande] = await Commande.update(
     { name, prix, date, status },
-    { where: { id: id_commande }, returning: true }
+    { where: { id: id }, returning: true }
   );
 
   if (updatedRows === 0) {
@@ -38,9 +38,9 @@ const modifierCommande = async (req, res) => {
 
 // Supprimer une commande d'un bar
 const supprimerCommande = async (req, res) => {
-  const { id_commande } = req.params;
+  const { id } = req.params;
 
-  const commande = await Commande.findByPk(id_commande);
+  const commande = await Commande.findByPk(id);
   if (!commande) {
     return res.status(404).json({ message: "Commande non trouvée" });
   }
@@ -63,9 +63,9 @@ const listeCommandes = async (req, res) => {
 
 // Détail d'une commande d'un bar
 const detailCommande = async (req, res) => {
-  const { id_commande } = req.params;
+  const { id } = req.params;
 
-  const commande = await Commande.findByPk(id_commande);
+  const commande = await Commande.findByPk(id);
   if (!commande) {
     return res.status(404).json({ message: "Commande non trouvée" });
   }

@@ -18,7 +18,7 @@
   
   function handleSubmit() {
     dispatch('submit', { item, mode });
-    closeModal();
+    // closeModal();
   }
   
   function handleOutsideClick(event) {
