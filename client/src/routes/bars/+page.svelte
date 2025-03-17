@@ -23,7 +23,7 @@
 
   </script>
   <div class="flex flex-col items-center gap-4 pb-[5vh]">
-      <h2 class="text-7xl pb-[5vh]">Les David’s Pub</h2>
+      <h1 class="text-7xl pb-[5vh]">Les David’s Pub</h1>
       <Button text="Ajouter un bar" textColor="text-white" color="bg-[var(--clr-blue)]" {onClick} />
   </div>
   <section class="grid grid-cols-2 gap-16 m-auto justify-items-center py-[5vh] w-[80%]">

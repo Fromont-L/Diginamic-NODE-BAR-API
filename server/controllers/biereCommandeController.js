@@ -40,4 +40,25 @@ const supprimerBiereDeCommande = async (req, res) => {
   res.json({ message: "Bière supprimée de la commande avec succès" });
 };
 
-module.exports = { ajouterBiereACommande, supprimerBiereDeCommande };
+const ListeBieresDeCommande = async (req, res) => {
+  const { id } = req.params;
+
+  const commande = await Commande.findByPk(id);
+  if (!commande) {
+    return res.status(404).json({ message: "Commande non trouvée" });
+  }
+
+  const biereCommande = await BiereCommande.findAll({
+    where: { CommandeId: id },
+  });
+
+  if (biereCommande.length === 0) {
+    return res.status(404).json({ message: "Aucune bière trouvée pour cette commande" });
+  }
+
+  res.status(200).json(biereCommande);
+};
+
+
+
+module.exports = { ajouterBiereACommande, supprimerBiereDeCommande, ListeBieresDeCommande };

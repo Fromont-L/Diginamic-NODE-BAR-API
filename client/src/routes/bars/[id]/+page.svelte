@@ -24,7 +24,7 @@
   {#if barData}
     <div class="flex flex-col items-center p-6">
         <h1 class="text-4xl font-bold text-white-800 mb-6 text-center">{barData.name}</h1>
-      <div class="flex flex-col md:flex-row items-center md:items-start shadow-lg rounded-xl p-6 max-w-8xl w-full">
+      <div class="flex flex-col md:flex-row gap-8 items-center md:items-start shadow-lg rounded-xl p-6 max-w-8xl w-full">
         <div class="md:w-1/3 flex justify-center">
           <div class="border-8 border-white rounded-xl shadow-md">
             <img src={imagePub} alt={barData.name} class="rounded-lg shadow-md max-h-60"/>
@@ -43,7 +43,7 @@
         </div>
       </div>
     </div>
-    <div class="flex justify-between">
+    <div class="flex justify-between flex-col md:flex-row">
       <BiereTable barId={$page.params.id}/>
       <CommandeTable barId={$page.params.id}/>
     </div>
