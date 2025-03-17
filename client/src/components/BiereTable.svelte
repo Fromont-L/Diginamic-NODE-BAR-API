@@ -68,6 +68,7 @@
         await axios.put(`http://localhost:3000/biere/${item.id}`, item);
       }
       await loadBieres();
+      closeModal();
     } catch (error) {
       console.error("Erreur lors de la sauvegarde:", error);
     }
